@@ -71,7 +71,38 @@
                 </div>
             </div>
         </nav>
-
+    
+          </div>
+ 
+          @auth
+          <div class="container">
+              @if (session()->has('success'))
+                  <div class="alert alert-success">
+                      {{ session()->get('success') }}
+                  </div>
+              @endif
+              <div class="row">
+                  <div class="col-md-4 py-4">
+                      <ul class="list-group">
+                            <li class="list-group-item">
+                              <a href="{{ route('phones.index') }}">phones</a>
+                            </li>
+                        
+                      </ul>
+                  </div>
+                  <div class="col-md-8">
+                      <main class="py-4">
+                          {{-- @yield('content') --}}
+                      </main>
+                  </div>
+              </div>
+          </div>
+      @else
+          <main class="py-4">
+              {{-- @yield('content') --}}
+          </main>
+      @endauth
+  </div>       
         <main class="py-4">
             @yield('content')
         </main>

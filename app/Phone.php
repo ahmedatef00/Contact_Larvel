@@ -12,4 +12,9 @@ class Phone extends Model{
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 
-}
+    public function user() {
+        return $this -> belongsTo(User::class);
+    //many phones to one users  
+    }
+
+    }

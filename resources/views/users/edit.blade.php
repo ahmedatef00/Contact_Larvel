@@ -2,11 +2,6 @@
     <div class="card-header">
       Edit phone
     </div>
-    @if(session()->get('success'))
-    <div class="alert alert-success">
-      {{ session()->get('success') }}
-      @endif
-
     <div class="card-body">
       @if ($errors->any())
         <div class="alert alert-danger">
@@ -16,14 +11,13 @@
               @endforeach
           </ul>
         </div><br />
-
       @endif
-        <form method="post" action="{{ route('phones.update', $phone->id) }}">
+        <form method="post" action="{{ route('phones.update', $phones->id) }}">
           @method('PATCH')
           @csrf
           <div class="form-group">
             <label for="name">phone :</label>
-            <input type="text" class="form-control" name="phone" value={{ $phone->phone }} />
+            <input type="text" class="form-control" name="phone" value={{ $phones->phone }} />
           </div>
 
         

@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Phonerequest;
 use App\Phone;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Mockery\Matcher\Pattern;
+
 class PhoneController extends Controller
 {
     /**
@@ -17,8 +21,10 @@ class PhoneController extends Controller
         // 
         // return"ssd";
         $phones = Phone::all();
-
-        return view('phones.index', compact('phones'));
+// $phones=Auth::user()->phones;  //listing phones from users
+// return view('phones.index',['phones'=>$phones]);
+// echo $phones;
+       return view('phones.index')->with('phones',$phones);
 
 
     }
@@ -31,7 +37,7 @@ class PhoneController extends Controller
     public function create()
     {
         //
-        return view('phones.create');
+        return view('phones..create');
 
     }
 
@@ -41,24 +47,37 @@ class PhoneController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Phonerequest $request   )
     {
 
         // return(Auth::user()->id);
-        //
-        $request->validate([
-            'phone'=>'required',
+        //   '/^01[0-2]{1}[0-9]{8}/'
+
+        //php artisan make:request Phonerequest
+        // $request->validate([
+        //     'phone'=>'numeric|required|digits:10',
+        //     // 'phone'=>
           
-          ]);
+        //   ]);
+        //   $phone = new Phone;
+         Auth::user()->phones()->
          
-          $phone = new Phone;
-          $phone->phone = $request->phone;
-        $phone->user_id = Auth::user()->id;
+         
+         create(
+
+          array('phone' => $request->phone)
+         );       //return object user
+
+
+
+    //   $phone->user();
+
 
 
            
-          $phone->save();
-          return redirect('/phones/create')->with('success', 'Stock has been added');
+        //   $phone->save();
+          //session in larvel
+          return redirect('/phones/create')->with('success', 'phone has been added');
         }
     
     
@@ -80,13 +99,15 @@ class PhoneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Phone $phone)
     {
         //
 
-        $phones = Phone::find($id);
+        // $phones = Phone::find($id);
 
-        return view('phones.edit', compact('phones'));
+        return view('phones.edit', compact('phone'));
+    
+    
     }
     
 
@@ -97,18 +118,36 @@ class PhoneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Phone $phone)
     {
+        // $phones = Phone::find($id);
+
         //
-        $request->validate([
-            'phone'=>'required',
-          ]);
+        // $request->validate([
+        //     'phone'=>'required|numeric',
+        //   ]);
     
-          $phone = Phone::find($id);
-          $phone->phone = $request->get('phone');
-          $phone->save();
+        //   $phone = Phone::find($id);
+        //   $phone->phone = $request->get('phone');
+        //   $phone->save();
     
-          return redirect('/phones')->with('success', 'Stock has been updated');
+        //   return redirect('/phones')->with('success', 'phone has been updated');
+         
+     
+        $this->authorize('update', $phone);
+
+        $phone->update(
+
+    ['phone' => $request->phone,
+        
+    ]
+
+);
+ 
+//    return view('phones.edit',compact('phone',$phone))->with('sucess','phone has been updated');
+   return redirect('/phones')->with('success', 'phone has been updated');
+
+
     }
 
     /**
@@ -117,12 +156,16 @@ class PhoneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Phone $phone)
     {
         //
-        $phones = Phone::find($id);
-     $phones->delete();
+        // $phones = Phone::find($id);
+        $this->authorize('delete', $phone);
 
-     return redirect('/phones')->with('success', 'Stock has been deleted Successfully');
+     $phone->delete();
+
+     return redirect('/phones')->with('success', 'phone has been deleted Successfully');
     }
+
+
 }

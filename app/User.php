@@ -36,4 +36,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //
+    public function phones() {
+        //(the name of the class el assasy )
+        return $this -> hasMany(Phone::class);//,'forigen key','primary key bta3 el uusers'
+    //many phones to one users  
+    //kol user leh many phones 
+
+    }
+    public function contact() {
+        return $this->belongsToMany('App\User',"contacts", 'user_id', 'contact_id'); 
+    }
+
+public function inversecontact() {
+        return $this->belongsToMany('App\User',"contacts", 'contact_id','user_id'); 
+    }
+      
+
 }

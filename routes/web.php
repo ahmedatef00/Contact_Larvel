@@ -11,16 +11,24 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');//after login
+
 // Route::resource('phones', 'PhoneController');
 
 // Route::get('/welcome', function () {
 //     return view('phones');
 // });
 Route::resource('phones', 'PhoneController');
+
+Route::get('/users', 'UserController@index');
+
+Route::resource('users', 'UserController');
+Auth::routes();
